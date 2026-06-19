@@ -1,14 +1,10 @@
-package com.ltq;
-
-
-
-
-import javafx.scene.control.Alert;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+package com.dht.utils;
+
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -25,13 +21,13 @@ public class MyAlertSingleton {
     }
     
     public static MyAlertSingleton getInstance() {
-        if (instance == null){
+        if (instance == null)
             instance = new MyAlertSingleton();
-        }
+        
         return instance;
     }
     
-    public void showMeg(String content){
+    public void showMsg(String content) {
         this.alert.setContentText(content);
         this.alert.show();
     }

@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.ltq.utills.themes;
+package com.dht.utils.themes;
 
 /**
  *
  * @author admin
  */
-public enum ThemeTypes {
-    Default, Dark, Light;
+public abstract class ThemeAbstractFactory {
+    public abstract String getStyleSheet();
 }
