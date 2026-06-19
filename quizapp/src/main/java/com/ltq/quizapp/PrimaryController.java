@@ -1,10 +1,10 @@
 package com.ltq.quizapp;
 
-import com.dht.utils.MyAlertSingleton;
-import com.dht.utils.themes.DarkFactory;
-import com.dht.utils.themes.LightFactory;
-import com.dht.utils.themes.ThemeManager;
-import com.dht.utils.themes.ThemeTypes;
+import com.ltq.utils.MyAlertSingleton;
+import com.ltq.utils.themes.DarkFactory;
+import com.ltq.utils.themes.LightFactory;
+import com.ltq.utils.themes.ThemeManager;
+import com.ltq.utils.themes.ThemeTypes;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
