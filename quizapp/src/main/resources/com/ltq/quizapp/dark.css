@@ -1,0 +1,22 @@
+.Container {
+    -fx-background-color: #121212;
+    -fx-alignment: CENTER;
+    -fx-spacing: 15;
+}
+
+.Subject {
+    -fx-font-family: "Verdana";
+    -fx-font-size: 14pt;
+    -fx-font-weight: bold;
+    -fx-fill: #FFFFFF;
+}
+
+.Button {
+    -fx-background-color: #333333;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Verdana";
+    -fx-font-size: 14pt;
+    -fx-pref-width: 250;
+    -fx-padding: 10;
+}
+
