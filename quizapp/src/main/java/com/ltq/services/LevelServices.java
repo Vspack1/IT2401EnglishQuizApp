@@ -4,38 +4,36 @@
  */
 package com.ltq.services;
 
-import com.ltq.pojo.Category;
+import com.ltq.pojo.Level;
 import com.ltq.utils.MyConnectionSingleton;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.SQLException;
 
 /**
  *
- * @author admin
+ * @author DELL
  */
-public class CategoryServices {
-
-    public List<Category> getCates() throws SQLException {
-        //B2 -> Mo ket noi
+public class LevelServices {
+    public List<Level> getLevels() throws SQLException {
         Connection conn = MyConnectionSingleton.getInstance().connect();
 
-        //B3 -> Thuc thi truy van
-        String sql = "SELECT * FROM category";
+        // B3 -> Thuc thi truy van
+        String sql = "SELECT * FROM level";
         PreparedStatement stm = conn.prepareCall(sql);
         ResultSet rs = stm.executeQuery();
-
-        List<Category> cates = new ArrayList<>();
+        
+        List<Level> levels = new ArrayList<>();
         while (rs.next()) {
             int id = rs.getInt("id");
             String name = rs.getString("name");
 
-            cates.add(new Category(id, name));
+            levels.add(new Level(id, name));
         }
-        return cates;
+        
+        return levels;
     }
 }

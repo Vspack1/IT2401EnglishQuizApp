@@ -9,7 +9,6 @@ package com.ltq.pojo;
  * @author admin
  */
 public class Category {
-
     private int id;
     private String name;
 
@@ -23,11 +22,10 @@ public class Category {
 
     @Override
     public String toString() {
-        return this.name;
+        return this.name; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
     
-    
-    
+
     /**
      * @return the id
      */

@@ -13,18 +13,59 @@ public class Choice {
     private String content;
     private boolean correct;
 
-    public Choice() {//Constructor
+    public Choice() {
     }
 
-    public Choice(int id, String content, boolean correct) {//Constructor have id, tai du lieu len database
+    public Choice(int id, String content, boolean correct) {
         this.id = id;
         this.content = content;
         this.correct = correct;
     }
     
-    public Choice(String content, boolean correct) {//Constructor without id, chen du lieu tu app xuong database
-        this.id = id;
+    public Choice(String content, boolean correct) {
         this.content = content;
+        this.correct = correct;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * @return the correct
+     */
+    public boolean isCorrect() {
+        return correct;
+    }
+
+    /**
+     * @param correct the correct to set
+     */
+    public void setCorrect(boolean correct) {
         this.correct = correct;
     }
 }

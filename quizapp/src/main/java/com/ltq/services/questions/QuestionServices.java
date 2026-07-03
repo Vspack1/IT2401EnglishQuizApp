@@ -5,6 +5,7 @@
 package com.ltq.services.questions;
 
 import com.ltq.pojo.Category;
+import com.ltq.pojo.Level;
 import com.ltq.pojo.Question;
 import com.ltq.utils.MyConnectionSingleton;
 import java.sql.Connection;
@@ -20,13 +21,34 @@ import java.util.List;
  * @author DELL
  */
 public class QuestionServices {
-    public List<Question> getQuestions() throws SQLException{
-        //B2 -> Mo ket noi
+    public List<Question> getQuestions(String kw, Category c, Level lvl) throws SQLException {
         Connection conn = MyConnectionSingleton.getInstance().connect();
 
-        //B3 -> Thuc thi truy van
-        String sql = "SELECT * FROM question";
+        // B3 -> Thuc thi truy van
+        String sql = "SELECT * FROM question WHERE 1=1";
+        
+        List<Object> params = new ArrayList<>();
+        if (kw != null && !kw.isEmpty()) {
+            sql += " AND content like concat('%', ?, '%')";
+            params.add(kw);
+        }
+        
+        if (c != null) {
+            sql += " AND category_id = ?";
+            params.add(c.getId());
+        }
+        
+        if (lvl != null) {
+            sql += " AND level_id = ?";
+            params.add(lvl.getId());
+        }
+        
+        sql += " ORDER BY id DESC";
+        
         PreparedStatement stm = conn.prepareCall(sql);
+        for (int i = 0; i < params.size(); i++)
+            stm.setObject(i + 1, params.get(i));
+        
         ResultSet rs = stm.executeQuery();
         
         List<Question> questions = new ArrayList<>();
@@ -36,6 +58,7 @@ public class QuestionServices {
 
             questions.add(new Question.Builder().setContent(content).setId(id).build());
         }
+        
         return questions;
     }
 }

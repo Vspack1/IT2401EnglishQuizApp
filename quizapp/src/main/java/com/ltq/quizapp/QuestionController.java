@@ -5,28 +5,31 @@
 package com.ltq.quizapp;
 
 import com.ltq.pojo.Category;
+import com.ltq.pojo.Choice;
+import com.ltq.pojo.Level;
 import com.ltq.pojo.Question;
-import com.ltq.services.CategoryServices;
-import com.ltq.services.questions.QuestionServices;
-import com.ltq.utils.MyConnectionSingleton;
+import com.ltq.utils.Configs;
+import com.ltq.utils.MyAlertSingleton;
 import java.net.URL;
-import java.nio.channels.ConnectionPendingException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javax.xml.catalog.Catalog;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -35,34 +38,105 @@ import javax.xml.catalog.Catalog;
  */
 public class QuestionController implements Initializable {
     @FXML private ComboBox<Category> cbCates;
+    @FXML private ComboBox<Level> cbLevels;
+    @FXML private ComboBox<Category> cbSearchCates;
+    @FXML private ComboBox<Level> cbSearchLevels;
     @FXML private TableView<Question> tvQuestions;
+    @FXML private VBox vChoices;
+    @FXML private TextArea txtContent;
+    @FXML private TextField txtKeywords;
+    @FXML private ToggleGroup group;
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        CategoryServices s = new CategoryServices();
-        QuestionServices s2 = new QuestionServices();
         this.loadColums();
+        this.loadTableQuestions();
         try {
-            this.cbCates.setItems(FXCollections.observableList(s.getCates()));
-            this.tvQuestions.setItems(FXCollections.observableList(s2.getQuestions()));
-            s.getCates();
-        } catch (Exception ex) {
-            Logger.getLogger(QuestionController.class.getName()).log(Level.SEVERE, null, ex);
+            this.cbCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
+            this.cbLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
+            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
+            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
+            
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
         }
-    }
+        
+        this.txtKeywords.textProperty().addListener(e -> {
+            this.loadTableQuestions();
+        });
+        this.cbSearchCates.getSelectionModel().selectedItemProperty().addListener(e -> {
+            this.loadTableQuestions();
+        });
+        this.cbSearchLevels.getSelectionModel().selectedIndexProperty().addListener(e -> {
+            this.loadTableQuestions();
+        });
+    }    
     
     private void loadColums() {
-        TableColumn colID = new TableColumn("Id");
-        colID.setCellValueFactory(new PropertyValueFactory("id"));
+        TableColumn colId = new TableColumn("Id");
+        colId.setPrefWidth(100);
+        colId.setCellValueFactory(new PropertyValueFactory("id"));
         
         TableColumn colContent = new TableColumn("Nội dung câu hỏi");
         colContent.setCellValueFactory(new PropertyValueFactory("content"));
         colContent.setPrefWidth(300);
         
-        this.tvQuestions.getColumns().addAll(colID, colContent);
+        this.tvQuestions.getColumns().addAll(colId, colContent);
     }
     
+    public void addChoice(ActionEvent e) {
+        HBox h = new HBox();
+        h.getStyleClass().add("Container");
+        
+        RadioButton r = new RadioButton();
+        r.setToggleGroup(group);
+        TextField t = new TextField();
+        t.getStyleClass().add("Input");
+        
+        h.getChildren().addAll(r, t);
+        
+        this.vChoices.getChildren().add(h);
+    }
+    
+    public void addQuestion(ActionEvent e) {
+        Question q = new Question.Builder().setContent(this.txtContent.getText())
+                .setLevel(this.cbLevels.getSelectionModel().getSelectedItem())
+                .setCategory(this.cbCates.getSelectionModel().getSelectedItem()).build();
+        
+        List<Choice> choices = new ArrayList<>();
+        for (var hbox: this.vChoices.getChildren()) {
+             HBox h = (HBox) hbox;
+             
+             RadioButton r = (RadioButton) h.getChildren().get(0);
+             TextField t = (TextField) h.getChildren().get(1);
+             
+             choices.add(new Choice(t.getText(), r.isSelected()));
+        }
+        
+        try {
+            Configs.uQuestionService.addQuestion(q, choices);
+            
+            MyAlertSingleton.getInstance().showMsg("Thêm câu hỏi thành công!");
+            this.loadTableQuestions();
+        } catch (SQLException ex) {
+            MyAlertSingleton.getInstance().showMsg("Thêm câu hỏi thất bại, do: " + ex.getMessage());
+        }
+    }
+    
+    private void loadTableQuestions() {
+        
+        try {
+            this.tvQuestions.setItems(FXCollections.observableList(Configs.questionService.getQuestions(this.txtKeywords.getText(), 
+                    this.cbSearchCates.getSelectionModel().getSelectedItem(), 
+                    this.cbSearchLevels.getSelectionModel().getSelectedItem())));
+        } catch (SQLException ex) {
+            Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        
+    }
 }
