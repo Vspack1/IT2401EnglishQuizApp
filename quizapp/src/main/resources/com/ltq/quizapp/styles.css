@@ -2,7 +2,7 @@
     -fx-background-color: lightblue;
     -fx-alignment: CENTER;
     -fx-spacing: 15;
-    -fx-padding:10;
+    -fx-padding: 10;
 }
 
 .Subject {
@@ -27,5 +27,5 @@
 }
 
 .combo-box > .list-cell {
-    -fx-text-fill: white;
+    -fx-text-fill: #D97706;
 }
