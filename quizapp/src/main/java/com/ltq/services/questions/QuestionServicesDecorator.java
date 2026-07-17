@@ -12,25 +12,24 @@ import java.util.List;
  *
  * @author DELL
  */
-public class QuestionServicesDecorator extends QuestionServicesBase {
+public class QuestionServicesDecorator implements QuestionServicesBase {
+
     private QuestionServicesBase service;
 
     public QuestionServicesDecorator(QuestionServicesBase service) {
         this.service = service;
     }
-    
-    
 
     @Override
-    public List<Question> getQuestions() throws SQLException {
-        List<Question> questions = this.service.getQuestions();
-        
+    public List<Question> list() throws SQLException {
+        List<Question> questions = this.service.list();
+
         ChoiceServices c = new ChoiceServices();
-        for (var q: questions)
+        for (var q : questions) {
             q.setChoices(c.getChoicesByQuestionId(q.getId()));
-        
+        }
+
         return questions;
     }
-    
-    
+
 }

@@ -4,47 +4,35 @@
  */
 package com.ltq.services.questions;
 
-import com.ltq.pojo.Category;
-import com.ltq.pojo.Level;
 import com.ltq.pojo.Question;
 import com.ltq.pojo.QuestionQueryBuilder;
-import com.ltq.utils.MyConnectionSingleton;
-import java.sql.Connection;
+import com.ltq.services.QueryServicesBase;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author DELL
  */
-public class QuestionServices extends QuestionServicesBase {
+public class QuestionServices extends QueryServicesBase<Question> implements QuestionServicesBase {
+
     private QuestionQueryBuilder query;
 
     public QuestionServices() {
+
     }
 
-    public QuestionServices(QuestionQueryBuilder query) {
-        this.query = query;
-    }
-    
     @Override
-    public List<Question> getQuestions() throws SQLException {
-        PreparedStatement stm = this.query.build();
-        
-        ResultSet rs = stm.executeQuery();
-        
-        List<Question> questions = new ArrayList<>();
-        while (rs.next()) {
-            int id = rs.getInt("id");
-            String content = rs.getString("content");
+    public PreparedStatement getStm() throws SQLException {
+        return this.query.build();
+    }
 
-            questions.add(new Question.Builder().setContent(content).setId(id).build());
-        }
-        
-        return questions;
+    @Override
+    public Question getObject(ResultSet rs) throws SQLException {
+        return new Question.Builder().setContent(rs.getString("content")).setId(rs.getInt("id")).build();
+
     }
 
     /**

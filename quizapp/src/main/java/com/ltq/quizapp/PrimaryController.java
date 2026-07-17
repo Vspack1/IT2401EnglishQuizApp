@@ -18,27 +18,28 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
-
 public class PrimaryController implements Initializable {
-    @FXML private ComboBox<ThemeTypes> cbThemes;
-    
+
+    @FXML
+    private ComboBox<ThemeTypes> cbThemes;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         this.cbThemes.setItems(FXCollections.observableArrayList(ThemeTypes.values()));
     }
-    
+
     public void manageQuestions(ActionEvent e) {
         MyStageSingleton.getInstance().showStage("questions");
     }
-    
+
     public void practice(ActionEvent e) {
         MyStageSingleton.getInstance().showStage("practice");
     }
-    
+
     public void exam(ActionEvent e) {
-        MyAlertSingleton.getInstance().showMsg("Comming soon...");
+        MyStageSingleton.getInstance().showStage("exam");
     }
-    
+
     public void changeTheme(ActionEvent e) {
         this.cbThemes.getSelectionModel().getSelectedItem().updateTheme(this.cbThemes.getScene());
     }

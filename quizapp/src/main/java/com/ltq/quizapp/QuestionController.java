@@ -9,6 +9,8 @@ import com.ltq.pojo.Choice;
 import com.ltq.pojo.Level;
 import com.ltq.pojo.Question;
 import com.ltq.pojo.QuestionQueryBuilder;
+import com.ltq.services.FlyweightFactory;
+import com.ltq.services.questions.QuestionFacade;
 import com.ltq.utils.Configs;
 import com.ltq.utils.MyAlertSingleton;
 import java.net.URL;
@@ -34,7 +36,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 
 /**
  * FXML Controller class
@@ -72,25 +73,10 @@ public class QuestionController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         this.loadColums();
         this.loadTableQuestions();
-        try {
-            this.cbCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
-            this.cbLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
-            this.cbSearchCates.setItems(FXCollections.observableList(Configs.cateService.getCates()));
-            this.cbSearchLevels.setItems(FXCollections.observableList(Configs.lvlService.getLevels()));
-
-        } catch (SQLException ex) {
-            System.err.println(ex.getMessage());
-        }
-
-        this.txtKeywords.textProperty().addListener(e -> {
-            this.loadTableQuestions();
-        });
-        this.cbSearchCates.getSelectionModel().selectedItemProperty().addListener(e -> {
-            this.loadTableQuestions();
-        });
-        this.cbSearchLevels.getSelectionModel().selectedIndexProperty().addListener(e -> {
-            this.loadTableQuestions();
-        });
+        this.cbCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateService, Configs.CATE_KEY)));
+        this.cbLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.lvlService, Configs.LVL_KEY)));
+        this.cbSearchCates.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.cateService, Configs.CATE_KEY)));
+        this.cbSearchLevels.setItems(FXCollections.observableList(FlyweightFactory.getData(Configs.lvlService, Configs.LVL_KEY)));
     }
 
     private void loadColums() {
@@ -152,9 +138,9 @@ public class QuestionController implements Initializable {
         QuestionQueryBuilder query = new QuestionQueryBuilder().withCategory(this.cbSearchCates.getSelectionModel().getSelectedItem())
                 .withKeywords(this.txtKeywords.getText())
                 .withLevel(this.cbSearchLevels.getSelectionModel().getSelectedItem());
-        Configs.questionService.setQuery(query);
+
         try {
-            this.tvQuestions.setItems(FXCollections.observableList(Configs.questionService.getQuestions()));
+            this.tvQuestions.setItems(FXCollections.observableList(QuestionFacade.getQuestions(query)));
         } catch (SQLException ex) {
             Logger.getLogger(QuestionController.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }

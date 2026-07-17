@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.ltq.services.questions;
+package com.ltq.services.exams;
 
 import com.ltq.pojo.Question;
 import java.sql.SQLException;
@@ -10,9 +10,9 @@ import java.util.List;
 
 /**
  *
- * @author DELL
+ * @author admin
  */
-public interface QuestionServicesBase {
+public interface ExamStrategy {
 
-    List<Question> list() throws SQLException;
+    List<Question> getQuestions() throws SQLException;
 }
